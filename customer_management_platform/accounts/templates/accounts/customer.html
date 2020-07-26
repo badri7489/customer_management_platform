@@ -1,5 +1,7 @@
 {% extends "accounts/main.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
     
     <br>
@@ -33,6 +35,34 @@
     </div>
 
     <br>
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <form action="" method="GET">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ myfilter.form.product|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ myfilter.form.status|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ myfilter.form.note|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ myfilter.form.start_date|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ myfilter.form.end_date|as_crispy_field }}
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- <br>
     <div class="row container-fluid">
         <div class="col">
             <div class="card card-body">
@@ -41,7 +71,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <br>
     <div class="row container-fluid">
@@ -50,7 +80,7 @@
                 <table class="table table-sm">
                     <tr>
                         <th>Product</th>
-                        <th>Category</th>
+                        <th>Note</th>
                         <th>Date Ordered</th>
                         <th>Status</th>
                         <th>Update</th>
@@ -59,7 +89,7 @@
                     {% for ord in orders %}
                         <tr>
                             <td>{{ ord.product }}</td>
-                            <td>{{ ord.product.category }}</td>
+                            <td>{{ ord.note }}</td>
                             <td>{{ ord.date_created }}</td>
                             <td>{{ ord.status }}</td>
                             <td><a class="btn btn-sm btn-info" href="{% url 'update_order' ord.id %}">Update</a></td>
