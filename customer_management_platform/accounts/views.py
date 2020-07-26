@@ -22,7 +22,7 @@ def home(request):
         'pending': pending,
     }
 
-    return render(request, 'accounts/dashboard.html', context=context)
+    return render(request, 'accounts/dashboard.html', context)
 
 def products(request):
     products = Product.objects.all()
