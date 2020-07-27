@@ -22,8 +22,17 @@ def registerPage(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
+
             group = Group.objects.get(name='customer')
             user.groups.add(group)
+            
+            Customer.objects.create(
+                user=user, 
+                name=username,
+                phone=form.cleaned_data.get('phone'),
+                email=form.cleaned_data.get('email'),
+                date_created=form.cleaned_data.get('date_created'),
+            )
             messages.success(request, 'Account was created for ' + username)
             return redirect('login')
             
@@ -60,9 +69,9 @@ def home(request):
     total_customers = customers.count()
 
     total_orders = orders.count()
-
     delivered = orders.filter(status='Delivered').count()
     pending = orders.filter(status='Pending').count()
+
     context = {
         'orders': orders, 
         'customers': customers,
@@ -73,9 +82,29 @@ def home(request):
 
     return render(request, 'accounts/dashboard.html', context)
 
+@login_required(login_url='login')
+@allowed_user(allowed_roles=['customer'])
 def userPage(request):
-    context = {}
+    orders = request.user.customer.order_set.all()
+
+    total_orders = orders.count()
+    delivered = orders.filter(status='Delivered').count()
+    pending = orders.filter(status='Pending').count()
+
+    print('Orders', orders)
+    context = {
+        'orders': orders,
+        'total_orders': total_orders,
+        'delivered': delivered,
+        'pending': pending,
+    }
     return render(request, 'accounts/user.html', context)
+
+@login_required(login_url='login')
+@allowed_user(allowed_roles=['customer'])
+def accountSettings(request):
+    context = {}
+    return render(request, 'accounts/account_settings.html', context)
 
 @login_required(login_url='login')
 @allowed_user(allowed_roles=['admin'])
