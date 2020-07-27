@@ -15,7 +15,7 @@ from .decorators import unauthenticated_user, allowed_user, admin_only
 
 @unauthenticated_user
 def registerPage(request):
-    form = CreateUserForm
+    form = CreateUserForm()
 
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -23,16 +23,6 @@ def registerPage(request):
             user = form.save()
             username = form.cleaned_data.get('username')
 
-            group = Group.objects.get(name='customer')
-            user.groups.add(group)
-            
-            Customer.objects.create(
-                user=user, 
-                name=username,
-                phone=form.cleaned_data.get('phone'),
-                email=form.cleaned_data.get('email'),
-                date_created=form.cleaned_data.get('date_created'),
-            )
             messages.success(request, 'Account was created for ' + username)
             return redirect('login')
             
